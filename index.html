@@ -5,105 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CookIt!</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #fdfdfd;
-      color: #333;
-    }
-    header {
-      background-color: #222;
-      color: #fff;
-      padding: 1rem 2rem;
-      text-align: center;
-      font-size: 2rem;
-    }
-    .search-box {
-      padding: 1rem 2rem;
-      text-align: center;
-    }
-    .search-box input {
-      width: 60%;
-      padding: 0.5rem;
-      font-size: 1rem;
-    }
-    .recipes {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1.5rem;
-      padding: 2rem;
-    }
-    .recipe-card {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 1rem;
-      background-color: #fff;
-      transition: box-shadow 0.3s ease;
-    }
-    .recipe-card:hover {
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    }
-    .recipe-card h3 {
-      margin-top: 0;
-    }
-    .recipe-details {
-      display: none;
-    }
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header { background: #333; color: #fff; padding: 1rem; text-align: center; }
+    .search-box { padding: 1rem; text-align: center; }
+    .search-box input { width: 80%; padding: .5rem; font-size: 1rem; }
+    .recipes { display: grid; gap: 1rem; padding: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .card { background: #fff; padding: 1rem; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    .card h3 { margin-top: 0; }
   </style>
 </head>
 <body>
   <header>CookIt!</header>
   <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search for a recipe..." />
+    <input id="search" placeholder="Search recipes..."/>
   </div>
-  <div class="recipes" id="recipeContainer"></div>
+  <div id="recipes" class="recipes"></div>
 
   <script>
     const recipes = [
-      {
-        name: "Butter Paneer",
-        ingredients: ["Paneer", "Butter", "Tomatoes", "Cream", "Spices"],
-        steps: "Cook tomatoes and spices, blend, add paneer and cream."
-      },
-      {
-        name: "Chowmein",
-        ingredients: ["Noodles", "Vegetables", "Soy Sauce", "Garlic"],
-        steps: "Boil noodles, stir-fry vegetables, mix with sauce and noodles."
-      },
-      {
-        name: "Chocolate Cake",
-        ingredients: ["Flour", "Cocoa Powder", "Sugar", "Eggs", "Butter"],
-        steps: "Mix ingredients, bake at 180°C for 30 minutes."
-      }
+      { name: "Butter Paneer", ingredients: ["Paneer","Butter","Tomatoes","Cream","Spices"], steps: "Cook tomatoes & spices, add paneer & cream." },
+      { name: "Chowmein", ingredients: ["Noodles","Vegetables","Soy Sauce","Garlic"], steps: "Boil noodles, stir-fry veg, mix." },
+      { name: "Chocolate Cake", ingredients: ["Flour","Cocoa Powder","Sugar","Eggs","Butter"], steps: "Mix & bake 180°C for 30 mins." },
+      { name: "Aloo Paratha", ingredients:["Wheat Flour","Potatoes","Spices","Ghee"], steps:"Knead dough, fill & cook on tawa."},
+      { name: "Fruit Salad", ingredients:["Apple","Banana","Orange","Grapes","Honey"], steps:"Chop fruits, mix, drizzle honey."}
     ];
 
-    const recipeContainer = document.getElementById('recipeContainer');
-    const searchInput = document.getElementById('searchInput');
+    const container = document.getElementById('recipes'),
+          search = document.getElementById('search');
 
-    function renderRecipes(list) {
-      recipeContainer.innerHTML = '';
-      list.forEach(recipe => {
-        const card = document.createElement('div');
-        card.className = 'recipe-card';
-        card.innerHTML = `
-          <h3>${recipe.name}</h3>
-          <strong>Ingredients:</strong>
-          <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
-          <strong>Steps:</strong>
-          <p>${recipe.steps}</p>
-        `;
-        recipeContainer.appendChild(card);
+    function show(list) {
+      container.innerHTML = '';
+      list.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `<h3>${r.name}</h3>
+                         <strong>Ingredients:</strong>
+                         <ul>${r.ingredients.map(i=>`<li>${i}</li>`).join('')}</ul>
+                         <strong>Steps:</strong><p>${r.steps}</p>`;
+        container.appendChild(div);
       });
     }
 
-    searchInput.addEventListener('input', () => {
-      const keyword = searchInput.value.toLowerCase();
-      const filtered = recipes.filter(r => r.name.toLowerCase().includes(keyword));
-      renderRecipes(filtered);
+    search.addEventListener('input', () => {
+      const q = search.value.toLowerCase();
+      show(recipes.filter(r => r.name.toLowerCase().includes(q)));
     });
 
-    renderRecipes(recipes);
+    show(recipes);
   </script>
 </body>
 </html>
